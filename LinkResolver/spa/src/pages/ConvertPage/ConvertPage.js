@@ -1,5 +1,7 @@
 ﻿import React, { useState } from 'react';
 import PropTypes from "prop-types";
+import { placeHolders } from "../../tools/urlHelper";
+import * as clipboard from "clipboard-polyfill";
 
 function ConvertPage(props){
 
@@ -10,13 +12,16 @@ function ConvertPage(props){
             <div>
                 <label>Long link:</label>
                 <input type="text" value={longLink} onChange={e => setLongLink(e.target.value)}
-                    placeholder="http://www.example.com"/>
+                    placeholder={placeHolders.httpUrl} />
                 <button type="button" onClick={() => props.onSubmit(longLink)} >Convert</button>
             </div>
-            <div>
-                <label>Short link:</label>
-                <input type="text" value={props.shortLink} readOnly={true} />
-            </div>
+            {props.shortLink &&
+                <div>
+                    <label>Short link:</label>
+                    <input type="text" value={props.shortLink} readOnly={true} />
+                    <button type="button" onClick={() => clipboard.writeText(props.shortLink)} >Copy</button>
+                </div>
+            }
         </div>
     );
 }
