@@ -30,10 +30,10 @@ namespace LinkResolver.Models.Gateways
         public async Task<string> Resolve(string ShortUrl)
         {
             if (ShortUrl.Length != options.UrlBase.Length + options.ShortMaxSize)
-                throw new ArgumentException("Invalid parameter: ShortUrl", "ShortUrl");
+                throw new ArgumentException("Invalid parameter", "ShortUrl");
 
             if (!ShortUrl.StartsWith(options.UrlBase, StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Invalid parameter: ShortUrl", "ShortUrl");
+                throw new ArgumentException("Invalid parameter", "ShortUrl");
 
             var shortPart = ShortUrl.Substring(options.UrlBase.Length);
 
@@ -49,7 +49,7 @@ namespace LinkResolver.Models.Gateways
         {
             //LongUrl = LongUrl.ToUpper();
             if (!Regex.IsMatch(LongUrl, URLHelpers.HttpRegexTemplate))
-                throw new ArgumentException("Invalid parameter: LongUrl", "LongUrl");
+                throw new ArgumentException("Invalid parameter", "LongUrl");
 
             //get string sha256 hash
             var hash = GetCryptoHashCode(LongUrl.ToUpper()).ToHexString();

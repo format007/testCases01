@@ -9,10 +9,10 @@ function App() {
     return (
         <div className="center-screen">
             <Router>
-                <div className="d-flex justify-content-center m-2 p-2">
+                <div className="d-flex justify-content-center">
                     <MainMenu />
                 </div>
-                <div className="d-flex justify-content-center m-2 p-2">
+                <div className="d-flex justify-content-center">
                     <Switch>
                         <Route path={clientRoutes.convert.url} component={ConvertPage} />
                         <Route path={clientRoutes.resolve.url} component={ResolvePage} />
