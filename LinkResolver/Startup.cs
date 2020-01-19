@@ -83,6 +83,10 @@ namespace LinkResolver
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
             }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
 
             app.UseCors("DefaultPolicy");
             app.UseMvc();

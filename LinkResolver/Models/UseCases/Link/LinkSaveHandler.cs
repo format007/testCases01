@@ -1,4 +1,5 @@
 ﻿using LinkResolver.Models.Dto.Requests;
+using LinkResolver.Models.Gateways.Exceptions;
 using LinkResolver.Models.Gateways.Interfaces;
 using LinkResolver.Models.UseCases.Interfaces;
 using System;
@@ -19,8 +20,19 @@ namespace LinkResolver.Models.UseCases.Link
 
         public async Task<CommandResult<string>> ExecAsync(LinkSaveCommand command)
         {
-            string result = await linkMgr.Save(command.LongUrl);
-            return new CommandResult<string>(true, null, result);
+            try
+            {
+                string result = await linkMgr.Save(command.LongUrl);
+                return new CommandResult<string>(true, null, result);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentException || ex is OperationAbortedException)
+                    return new CommandResult<string>(false,
+                        new CommandResultError() { Message = ex.Message, ErrorCode = ex.HResult }, null);
+
+                throw;
+            }
         }
     }
 }

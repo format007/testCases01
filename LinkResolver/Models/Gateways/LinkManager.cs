@@ -1,7 +1,9 @@
 ﻿using LinkResolver.Models.Data.Repositories;
 using LinkResolver.Models.Domain.Entities;
+using LinkResolver.Models.Gateways.Exceptions;
 using LinkResolver.Models.Gateways.Interfaces;
 using LinkResolver.Models.Tools;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +30,10 @@ namespace LinkResolver.Models.Gateways
         public async Task<string> Resolve(string ShortUrl)
         {
             if (ShortUrl.Length != options.UrlBase.Length + options.ShortMaxSize)
-                throw new ArgumentException("Invalid parameter", "ShortUrl");
+                throw new ArgumentException("Invalid parameter: ShortUrl", "ShortUrl");
 
             if (!ShortUrl.StartsWith(options.UrlBase, StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Invalid parameter", "ShortUrl");
+                throw new ArgumentException("Invalid parameter: ShortUrl", "ShortUrl");
 
             var shortPart = ShortUrl.Substring(options.UrlBase.Length);
 
@@ -40,14 +42,14 @@ namespace LinkResolver.Models.Gateways
             if (link != null)
                 return link.LongLink;
             else
-                throw new Exception("link not found");// заменить на конкретное исключение
+                throw new ObjectNotFoundException("Link can't be found");
         }
 
         public async Task<string> Save(string LongUrl)
         {
             //LongUrl = LongUrl.ToUpper();
             if (!Regex.IsMatch(LongUrl, URLHelpers.HttpRegexTemplate))
-                throw new ArgumentException("Invalid parameter", "LongUrl");
+                throw new ArgumentException("Invalid parameter: LongUrl", "LongUrl");
 
             //get string sha256 hash
             var hash = GetCryptoHashCode(LongUrl.ToUpper()).ToHexString();
@@ -57,7 +59,7 @@ namespace LinkResolver.Models.Gateways
             var link = (await linkMgr.GetFiltered(new LinkSpecification(l => l.LinkHash == hash))).FirstOrDefault();
             if (link != null)
                 return GetFullShortLink(link.ShortLink);
-            else 
+            else
             {
                 int retryCount = 0;
                 do
@@ -74,13 +76,16 @@ namespace LinkResolver.Models.Gateways
                             ShortLink = shortPart,
                             CreatedAt = DateTime.Now
                         };
-
-                        await linkMgr.Create(link);
-                        return GetFullShortLink(link.ShortLink);
+                        try
+                        {
+                            await linkMgr.Create(link);
+                            return GetFullShortLink(link.ShortLink);
+                        }
+                        catch (DbUpdateException) { }
                     }
 
                 } while (++retryCount < options.RetryLimit);
-                throw new Exception("Operation can't be completed");
+                throw new OperationAbortedException("Operation cann't be completed. Try again later");
             }
         }
 
