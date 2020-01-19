@@ -28,8 +28,8 @@ namespace LinkResolver.Controllers
             var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             var ex = feature?.Error;
 
-            string ErrorMessage = $"Something went wrong. Use this correlation id to investigate problem. CorrelationId: {CorrelationId}";
             string CorrelationId = Guid.NewGuid().ToString();
+            string ErrorMessage = $"Something went wrong. Use this correlation id to investigate problem. CorrelationId: {CorrelationId}";
 
             logger.LogError(ex, ErrorMessage);
 

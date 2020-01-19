@@ -31,6 +31,10 @@ namespace LinkResolver
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //Config
+            var linkMgrOptions = Configuration.GetSection("LinkManagerOptions").Get<LinkManagerOptions>();
+            services.AddSingleton<LinkManagerOptions>(linkMgrOptions);
+
             //DB
             string constr = Configuration.GetConnectionString("Default");
             services.AddDbContext<LinkDBContext>(option => option.UseSqlServer(constr));
@@ -38,13 +42,9 @@ namespace LinkResolver
             //DI
             services.AddTransient<ILinkManager, LinkManager>();
             services.AddTransient<ILinkEFManager, LinkEFManager>();
-            services.AddTransient<ICodeGenerator, SimpleCodeGenerator>();
             services.AddTransient<ICommandHandler<LinkSaveCommand, string>, LinkSaveHandler>();
             services.AddTransient<ICommandHandler<LinkResolveCommand, string>, LinkResolveHandler>();
-
-            //Config
-            var linkMgrOptions = Configuration.GetSection("LinkManagerOptions").Get<LinkManagerOptions>();
-            services.AddSingleton<LinkManagerOptions>(linkMgrOptions);
+            services.AddSingleton<ICodeGenerator>(setup => new SimpleCodeGenerator(linkMgrOptions.ShortMaxSize));
 
             //Swagger
             services.AddSwaggerGen(config =>

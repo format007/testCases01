@@ -7,6 +7,6 @@ namespace LinkResolver.Models.Gateways.Interfaces
 {
     public interface ICodeGenerator
     {
-        byte[] Generate();
+        string Generate();
     }
 }

@@ -18,7 +18,9 @@ const ResolvePage = (props) => {
             {
                 props.longLink && <div className="form-inline">
                     <label>Short link:</label>
-                    <a href={props.longLink}>{props.longLink}</a>
+                    <a href={props.longLink}>
+                        {props.longLink.length > 50 ? props.longLink.substring(0, 50) + "..." : props.longLink}
+                    </a>
                 </div>
             }
         </div>

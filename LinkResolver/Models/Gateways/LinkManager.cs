@@ -65,7 +65,7 @@ namespace LinkResolver.Models.Gateways
                 do
                 {
                     //generate shortCode
-                    var shortPart = codeGen.Generate().ToHexString().Substring(0, options.ShortMaxSize);
+                    var shortPart = codeGen.Generate();
                     link = (await linkMgr.GetFiltered(new LinkSpecification(l => l.ShortLink == shortPart))).FirstOrDefault();
                     if (link == null)
                     {
