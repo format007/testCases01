@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LinkResolver.Models.Gateways
@@ -27,10 +28,10 @@ namespace LinkResolver.Models.Gateways
         public async Task<string> Resolve(string ShortUrl)
         {
             if (ShortUrl.Length != options.UrlBase.Length + options.ShortMaxSize)
-                throw new Exception("invalidshorturl");// заменить на конкретное исключение
+                throw new ArgumentException("Invalid parameter", "ShortUrl");
 
             if (!ShortUrl.StartsWith(options.UrlBase, StringComparison.OrdinalIgnoreCase))
-                throw new Exception("invalidDomain");// заменить на конкретное исключение
+                throw new ArgumentException("Invalid parameter", "ShortUrl");
 
             var shortPart = ShortUrl.Substring(options.UrlBase.Length);
 
@@ -45,6 +46,8 @@ namespace LinkResolver.Models.Gateways
         public async Task<string> Save(string LongUrl)
         {
             //LongUrl = LongUrl.ToUpper();
+            if (!Regex.IsMatch(LongUrl, URLHelpers.HttpRegexTemplate))
+                throw new ArgumentException("Invalid parameter", "LongUrl");
 
             //get string sha256 hash
             var hash = GetCryptoHashCode(LongUrl.ToUpper()).ToHexString();
