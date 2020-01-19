@@ -25,12 +25,11 @@ namespace LinkResolver.Controllers
         [Route("/error")]
         public IActionResult Error()
         {
-            string CorrelationId = Guid.NewGuid().ToString();
-
             var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             var ex = feature?.Error;
 
             string ErrorMessage = $"Something went wrong. Use this correlation id to investigate problem. CorrelationId: {CorrelationId}";
+            string CorrelationId = Guid.NewGuid().ToString();
 
             logger.LogError(ex, ErrorMessage);
 
@@ -38,7 +37,7 @@ namespace LinkResolver.Controllers
             {
                 Status = (int)HttpStatusCode.InternalServerError,
                 Instance = feature?.Path,
-                Title = $"Something went wrong. Use this correlation id to investigate problem. CorrelationId: {CorrelationId}",
+                Title = ErrorMessage,
                 Detail = null
             };
 
