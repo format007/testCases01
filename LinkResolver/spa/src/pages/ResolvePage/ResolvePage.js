@@ -8,14 +8,15 @@ const ResolvePage = (props) => {
 
     return (
         <div>
-            <div>
+            <div className="form-inline">
                 <label>Short link:</label>
-                <input type="text" value={shortLink} onChange={e => setShortLink(e.target.value)}
+                <input className="form-control" type="text" value={shortLink} onChange={e => setShortLink(e.target.value)}
                     placeholder={placeHolders.shortLink} />
-                <button type="button" onClick={() => props.onSubmit(shortLink)} >Resolve</button>
+                <button className="btn btn-primary" type="button" onClick={() => props.onSubmit(shortLink)} >Resolve</button>
+
             </div>
             {
-                props.longLink && <div>
+                props.longLink && <div className="form-inline">
                     <label>Short link:</label>
                     <a href={props.longLink}>{props.longLink}</a>
                 </div>

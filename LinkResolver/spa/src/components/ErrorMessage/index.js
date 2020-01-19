@@ -2,7 +2,7 @@
 
 const ErrorMessage = (props) => {
     return (
-        <div>
+        <div className="alert alert-danger">
             {props.message || ""}
         </div>
     );

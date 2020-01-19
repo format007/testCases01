@@ -6,18 +6,22 @@ import ConvertPage from "./pages/ConvertPage";
 import ResolvePage from "./pages/ResolvePage";
 
 function App() {
-  return (
-    <div>
-          <Router>
-              <MainMenu />
-              <Switch>
-                  <Route path={clientRoutes.convert.url} component={ConvertPage} />
-                  <Route path={clientRoutes.resolve.url} component={ResolvePage} />
-                  <Redirect to={clientRoutes.convert.url} />
-              </Switch>
-          </Router>
-    </div>
-  );
+    return (
+        <div className="center-screen">
+            <Router>
+                <div className="d-flex justify-content-center m-2 p-2">
+                    <MainMenu />
+                </div>
+                <div className="d-flex justify-content-center m-2 p-2">
+                    <Switch>
+                        <Route path={clientRoutes.convert.url} component={ConvertPage} />
+                        <Route path={clientRoutes.resolve.url} component={ResolvePage} />
+                        <Redirect to={clientRoutes.convert.url} />
+                    </Switch>
+                </div>
+            </Router>
+        </div>
+    );
 }
 
 export default App;

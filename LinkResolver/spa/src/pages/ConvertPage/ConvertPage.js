@@ -3,23 +3,23 @@ import PropTypes from "prop-types";
 import { placeHolders } from "../../tools/urlHelper";
 import * as clipboard from "clipboard-polyfill";
 
-function ConvertPage(props){
+function ConvertPage(props) {
 
     const [longLink, setLongLink] = useState("");
 
     return (
         <div>
-            <div>
+            <div className="form-inline">
                 <label>Long link:</label>
-                <input type="text" value={longLink} onChange={e => setLongLink(e.target.value)}
+                <input className="form-control" type="text" value={longLink} onChange={e => setLongLink(e.target.value)}
                     placeholder={placeHolders.httpUrl} />
-                <button type="button" onClick={() => props.onSubmit(longLink)} >Convert</button>
+                <button type="button" className="btn btn-primary" onClick={() => props.onSubmit(longLink)} >Convert</button>
             </div>
             {props.shortLink &&
-                <div>
+                <div className="form-inline">
                     <label>Short link:</label>
-                    <input type="text" value={props.shortLink} readOnly={true} />
-                    <button type="button" onClick={() => clipboard.writeText(props.shortLink)} >Copy</button>
+                    <input className="form-control" type="text" value={props.shortLink} readOnly={true} />
+                    <button type="button" className="btn btn-info" onClick={() => clipboard.writeText(props.shortLink)} >Copy</button>
                 </div>
             }
         </div>
@@ -31,7 +31,7 @@ ConvertPage.propTypes = {
     onSubmit: PropTypes.func.isRequired
 }
 
-ConvertPage.defaultProps  = {
+ConvertPage.defaultProps = {
     shortLink: "",
     onSubmit: () => { }
 }
